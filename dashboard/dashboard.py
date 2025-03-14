@@ -7,8 +7,8 @@ from sklearn.preprocessing import MinMaxScaler
 sns.set(style="whitegrid")
 
 # Membaca dataset
-day_df = pd.read_csv("https://raw.githubusercontent.com/itspiroy/bike-sharing/refs/heads/main/data/day.csv")
-hour_df = pd.read_csv("https://raw.githubusercontent.com/itspiroy/bike-sharing/refs/heads/main/data/hour.csv")
+day_df = pd.read_csv("https://raw.githubusercontent.com/itspiroy/bike-sharing/refs/heads/main/data/https://raw.githubusercontent.com/itspiroy/bike-sharing/refs/heads/main/data/day.csv")
+hour_df = pd.read_csv("https://raw.githubusercontent.com/itspiroy/bike-sharing/refs/heads/main/data/https://raw.githubusercontent.com/itspiroy/bike-sharing/refs/heads/main/data/hour.csv")
 
 min_date = day_df['dteday'].min()
 max_date = day_df['dteday'].max()
@@ -27,7 +27,7 @@ st.markdown("---")
 
 # 1. Visualisasi distribusi penyewaan sepeda pada setiap musim
 st.subheader("Bagaimana distribusi penyewaan sepeda pada setiap musim?")
-day_df = pd.read_csv("https://raw.githubusercontent.com/itspiroy/bike-sharing/refs/heads/main/data/day.csv")
+day_df = pd.read_csv("https://raw.githubusercontent.com/itspiroy/bike-sharing/refs/heads/main/data/https://raw.githubusercontent.com/itspiroy/bike-sharing/refs/heads/main/data/day.csv")
 
 day_df['season'] = day_df['season'].map({
     1: 'Spring',
@@ -48,7 +48,7 @@ st.pyplot(plt)  # Menampilkan plot di Streamlit
 
 # 2. Visualisasi distribusi penyewaan sepeda berdasarkan tipe penyewa
 st.subheader("Bagaimana distribusi penyewaan sepeda berdasarkan tipe penyewa?")
-hour_df = pd.read_csv("https://raw.githubusercontent.com/itspiroy/bike-sharing/refs/heads/main/data/hour.csv")
+hour_df = pd.read_csv("https://raw.githubusercontent.com/itspiroy/bike-sharing/refs/heads/main/data/https://raw.githubusercontent.com/itspiroy/bike-sharing/refs/heads/main/data/hour.csv")
 
 hour_df['user_type'] = hour_df['registered'].apply(lambda x: 'Registered' if x > 0 else 'Casual')
 
