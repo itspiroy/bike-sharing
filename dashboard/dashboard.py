@@ -48,7 +48,7 @@ st.pyplot(plt)  # Menampilkan plot di Streamlit
 
 # 2. Visualisasi distribusi penyewaan sepeda berdasarkan tipe penyewa
 st.subheader("Bagaimana distribusi penyewaan sepeda berdasarkan tipe penyewa?")
-hour_df = pd.read_csv("hour.csv")
+hour_df = pd.read_csv("https://raw.githubusercontent.com/itspiroy/bike-sharing/refs/heads/main/data/hour.csv")
 
 hour_df['user_type'] = hour_df['registered'].apply(lambda x: 'Registered' if x > 0 else 'Casual')
 
