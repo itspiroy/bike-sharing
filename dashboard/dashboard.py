@@ -27,7 +27,7 @@ st.markdown("---")
 
 # 1. Visualisasi distribusi penyewaan sepeda pada setiap musim
 st.subheader("Bagaimana distribusi penyewaan sepeda pada setiap musim?")
-day_df = pd.read_csv("day.csv")
+day_df = pd.read_csv("https://raw.githubusercontent.com/itspiroy/bike-sharing/refs/heads/main/data/day.csv")
 
 day_df['season'] = day_df['season'].map({
     1: 'Spring',
