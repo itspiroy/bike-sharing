@@ -1,4 +1,4 @@
-# Bike Sharing Dashboard 🚲
+# Bike Sharing Dataset
 
 ## Setup Environment - Anaconda
 ```
