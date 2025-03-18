@@ -43,6 +43,7 @@ day_df['season'] = day_df['season'].map({1: 'Spring', 2: 'Summer', 3: 'Fall', 4:
 day_df = day_df[day_df['season'].isin(selected_season)]
 
 # 1. Bagaimana pengaruh kondisi cuaca terhadap jumlah penggunaan sepeda pada berbagai jam dalam sehari?
+st.subheader("Bagaimana pengaruh kondisi cuaca terhadap jumlah penggunaan sepeda pada berbagai jam dalam sehari?")
 sns.set(style="whitegrid")
 
 weather_avg = hour_df.groupby(['hr', 'weathersit'])['cnt'].mean().reset_index()
@@ -53,13 +54,23 @@ weather_avg['weathersit'] = weather_avg['weathersit'].map({
     3: 'Rain',
     4: 'Severe'
 })
+
+plt.figure(figsize=(10, 6))
+
+colors = ['#99ff99', '#ff9999', '#ffcc99', '#66b3ff']
+
+for i, (name, group) in enumerate(weather_avg.groupby('weathersit')):
+            plt.bar(group['hr'] + i * 0.2, group['cnt'], width=0.2, label=name, color=colors[i])
+
+plt.title('Pengaruh Cuaca terhadap Waktu Peminjaman Sepeda')
+plt.xlabel('Jam dalam Sehari')
 plt.ylabel('Jumlah Penggunaan Sepeda')
 plt.xticks(range(0, 24))  
 plt.legend(title='Cuaca')
 
 plt.tight_layout()
 
-plt.show()
+st.pyplot(plt)
 
 # 2. Bagaimana distribusi penyewaan sepeda berdasarkan tipe penyewa?
 st.subheader("Bagaimana distribusi penyewaan sepeda berdasarkan tipe penyewa?")
