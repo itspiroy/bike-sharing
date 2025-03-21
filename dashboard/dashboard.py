@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
+from sklearn.preprocessing import MinMaxScaler
 
 sns.set(style="whitegrid")
 
@@ -19,37 +20,41 @@ max_date = day_df['dteday'].max()
 # Sidebar untuk interaksi pengguna
 with st.sidebar:
     st.image("https://st4.depositphotos.com/2664341/31427/v/380/depositphotos_314276156-stock-illustration-illustration-cartoon-cute-boy-riding.jpg")
-
-    # Perbaikan: Konversi tanggal ke datetime sebelum filter
     start_date, end_date = st.date_input(
         label="📅 Rentang Waktu",
-        min_value=min_date.date(),
-        max_value=max_date.date(),
-        value=[min_date.date(), max_date.date()]
-    )
-
-    # Konversi start_date dan end_date ke datetime64
-    start_date = pd.to_datetime(start_date)
-    end_date = pd.to_datetime(end_date)
-
-    selected_season = st.multiselect(
-        "🗓 Pilih Musim:",
-        options=["Spring", "Summer", "Fall", "Winter"],
-        default=["Spring", "Summer", "Fall", "Winter"]
+        min_value=min_date,
+        max_value=max_date,
+        value=[min_date, max_date]
     )
 
 st.title("Bike Sharing Dataset")
-st.write("Visualisasi ini menganalisis distribusi penyewaan sepeda berdasarkan musim dan tipe penyewa.")
+st.write("Visualisasi ini menganalisis distribusi penyewaan sepeda berdasarkan tipe penyewa.")
 st.markdown("---")
 
-# Filter dataset berdasarkan rentang tanggal dan musim
-day_df['season'] = day_df['season'].map({1: 'Spring', 2: 'Summer', 3: 'Fall', 4: 'Winter'})
-filtered_day_df = day_df[(day_df['dteday'] >= start_date) & (day_df['dteday'] <= end_date)]
-filtered_day_df = filtered_day_df[filtered_day_df['season'].isin(selected_season)]
+# Filter dataset berdasarkan rentang tanggal
+day_df = day_df[(day_df['dteday'] >= pd.to_datetime(start_date)) & (day_df['dteday'] <= pd.to_datetime(end_date))]
 
-# 1. Pengaruh kondisi cuaca terhadap jumlah penggunaan sepeda pada berbagai jam dalam sehari
+# Menampilkan Total Penyewaan dan Rata-rata Harian
+total_penyewaan = day_df['cnt'].sum()
+rata_rata_harian = day_df['cnt'].mean()
+
+col1, col2 = st.columns(2)
+col1.metric("Total Penyewaan", f"{total_penyewaan:,}")
+col2.metric("Rata-rata Harian", f"{rata_rata_harian:,.2f}")
+
+st.markdown("---")
+
+# Menampilkan Penyewaan Sepeda Harian
+st.subheader("Penyewaan Sepeda Harian")
+plt.figure(figsize=(12, 6))
+sns.lineplot(x='dteday', y='cnt', data=day_df, marker='o')
+plt.xlabel("Tanggal")
+plt.ylabel("Jumlah Penyewaan")
+plt.xticks(rotation=45)
+st.pyplot(plt)
+
+# 1. Bagaimana pengaruh kondisi cuaca terhadap jumlah penggunaan sepeda pada berbagai jam dalam sehari?
 st.subheader("Bagaimana pengaruh kondisi cuaca terhadap jumlah penggunaan sepeda pada berbagai jam dalam sehari?")
-
 weather_avg = hour_df.groupby(['hr', 'weathersit'])['cnt'].mean().reset_index()
 weather_avg['weathersit'] = weather_avg['weathersit'].map({
     1: 'Clear',
@@ -60,29 +65,24 @@ weather_avg['weathersit'] = weather_avg['weathersit'].map({
 
 plt.figure(figsize=(10, 6))
 colors = ['#99ff99', '#ff9999', '#ffcc99', '#66b3ff']
-
 for i, (name, group) in enumerate(weather_avg.groupby('weathersit')):
     plt.bar(group['hr'] + i * 0.2, group['cnt'], width=0.2, label=name, color=colors[i])
 
 plt.title('Pengaruh Cuaca terhadap Waktu Peminjaman Sepeda')
 plt.xlabel('Jam dalam Sehari')
 plt.ylabel('Jumlah Penggunaan Sepeda')
-plt.xticks(range(0, 24))
+plt.xticks(range(0, 24))  
 plt.legend(title='Cuaca')
-plt.tight_layout()
-
 st.pyplot(plt)
 
-# 2. Distribusi penyewaan sepeda berdasarkan tipe penyewa
+# 2. Bagaimana distribusi penyewaan sepeda berdasarkan tipe penyewa?
 st.subheader("Bagaimana distribusi penyewaan sepeda berdasarkan tipe penyewa?")
 hour_df['user_type'] = hour_df['registered'].apply(lambda x: 'Registered' if x > 0 else 'Casual')
 user_type_avg = hour_df.groupby(['hr', 'user_type'])['cnt'].mean().reset_index()
-
 plt.figure(figsize=(10, 6))
 sns.lineplot(x='hr', y='cnt', hue='user_type', data=user_type_avg, marker='o')
 plt.title('Distribusi Penyewaan Sepeda Berdasarkan Tipe Penyewa')
 plt.xlabel('Jam dalam Sehari (0-23)')
 plt.ylabel('Jumlah Penggunaan Sepeda')
 plt.xticks(range(0, 24))
-
 st.pyplot(plt)
